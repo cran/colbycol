@@ -1,7 +1,7 @@
 Package: colbycol
 Type: Package
 Title: Read big text files column by column
-Version: 0.4
+Version: 0.5
 Date: 2009-07-29
 Author: Carlos J. Gil Bellosta
 Maintainer: Carlos J. Gil Bellosta <cgb@datanalytics.com>
@@ -13,6 +13,6 @@ License: GPL
 LazyLoad: yes
 Repository: CRAN
 Repository/R-Forge/Project: colbycol
-Repository/R-Forge/Revision: 11
-Date/Publication: 2011-01-19 23:16:13
-Packaged: 2010-11-29 16:00:28 UTC; rforge
+Repository/R-Forge/Revision: 14
+Date/Publication: 2011-02-11 16:00:52
+Packaged: 2011-02-07 21:47:25 UTC; rforge
