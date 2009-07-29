@@ -1,3 +1,5 @@
+import("rJava")
+
 export( cbc.get.col, cbc.read.table, colnames, nrow, ncol, colnames.default, nrow.default, ncol.default )
 #export( cbc.get.col, cbc.read.table, colnames.colbycol, nrow.colbycol, ncol.colbycol, colnames, nrow, ncol, colnames.default, nrow.default, ncol.default )
 

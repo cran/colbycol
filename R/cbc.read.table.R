@@ -7,6 +7,7 @@
 # Author:       Carlos J. Gil Bellosta
 #
 # Modifications: 
+#               20090729, CJGB: Changed underlying language from Python to Java
 #
 #################################################################
 
@@ -41,35 +42,19 @@ cbc.read.table <- function( file, tmp.dir = tempfile( pattern = "dir" ), sep = "
     columns <- sapply( 1:ncol( tmp.data ), function( i ) list( filename = formatC( i, width = 4, flag = "0" )), simplify = FALSE )
     names( columns ) <- colnames( tmp.data )
 
-    if( !exists( "skip", mode = "numeric" ) )
-        skip <- 0
+    skip <- ifelse( exists( "skip", mode = "numeric" ), skip, 0 ) + header
 
-    skip <- skip + header
+    # Call to Java code via rJava
+    .jcbc <- .jnew( "com/datanalytics/colbycol/ColByCol", 
+                    file, 
+                    paste( lapply( columns, function(x) x$filename ), collapse = ";" ),
+                    as.integer( skip ), sep )
 
-    cat( "filename | ", file, "\n", file = ".delete" )
-    cat( "sep      : ", sep, "\n",  file = ".delete", append = TRUE )
-    cat( "skip     : ", skip, "\n", file = ".delete", append = TRUE )
-    cat( "files    : ", paste( lapply( columns, function(x) x$filename ), collapse = ";" ), "\n", file = ".delete", append = TRUE )
+    .jcall(.jcbc, "V", "execute", getwd() )        # Assigns the path in Jython; all required data resides there
 
-    # From here on, calls to Python via Jython
-    # Adapted from G. Grothendieck's sympyStart function from package rSymPy
-
-    if (!exists(".Jython", .GlobalEnv)){
-
-        jython <- Sys.getenv("RSYMPY_JYTHON")
-        if (jython == "") jython <- system.file("jython", package = "rSymPy")
-
-        library(rJava)
-        .jinit(file.path(jython, "jython.jar"))
-        assign(".Jython", .jnew("org.python.util.PythonInterpreter"), .GlobalEnv)
-    }
-    
-    .jcall(.Jython, "V", "exec", paste("work_dir = '", getwd(), "'", sep = "" ))        # Assigns the path in Jython; all required data resides there
-    .jcall(.Jython, "V", "execfile", system.file("python", "colbycol.py", package = "colbycol") ) 
+    # TODO: check exceptions
 
     # At this point, the input files should already be sliced
-
-    file.remove( ".delete" )
 
     for( column in names(columns) ){
         tmp <- read.table( columns[[column]]$filename, sep = sep, na.strings = "", comment.char = "", quote = "", header = FALSE, ... )[,1]
