@@ -22,7 +22,6 @@ cbc.test.data
     Randomly generated.
 }
 
-\seealso{ Nothing }
 \examples{
     data( cbc.test.data )
     head( cbc.test.data )

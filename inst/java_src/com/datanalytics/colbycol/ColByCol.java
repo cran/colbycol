@@ -20,6 +20,7 @@ import java.io.FileReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.File;
+import java.util.Random;
 
 /**
  *
@@ -29,14 +30,21 @@ import java.io.File;
 public class ColByCol {
 
     private char sep;
-    private int    skip;
+    private int  skip;
+    private int[] justRead;
     private String inFileName;
     private String[] outFileName;
+    private Random   generator;
+    private double   samplePct;
 
-    public ColByCol ( String inFileName, String outFileNames, int skip, String sep ){
+    public ColByCol ( String inFileName, String outFileNames, int[] justRead, 
+                      double samplePct, int skip, String sep ){
 
         this.inFileName = inFileName;
         outFileName     = outFileNames.split(";");
+        this.justRead   = justRead;
+        this.generator  = new Random( 19740819 );
+        this.samplePct  = samplePct;
 
         this.skip = skip;
         this.sep  = sep.charAt(0);
@@ -46,8 +54,6 @@ public class ColByCol {
     public void execute( String workDir ) throws IOException {
 
         CSVReader reader = new CSVReader( new FileReader( inFileName ), sep );
-System.out.println( inFileName );
-System.out.println( "sep" + sep + "endsep");
         BufferedWriter[] outFile = new BufferedWriter[ outFileName.length ];
 
         for( int i = 0; i < outFileName.length; i++){
@@ -58,15 +64,22 @@ System.out.println( "sep" + sep + "endsep");
         String [] nextLine;
         String token;
         int cont = 0;
+        boolean doSample = this.samplePct < 1;
 
         while ( (nextLine = reader.readNext() ) != null ) {
             cont++;
-            if( cont <= skip )
+
+            if( cont <= this.skip )
                 continue;
 
-            for( int i = 0; i < nextLine.length; i++ ){
+            if( doSample ){
+                if( generator.nextDouble() > this.samplePct )
+                    continue;
+            }
+
+            for( int i : justRead ){
                 token = nextLine[i].trim();
-                if( token == "" )
+                if( token.equals("") )
                     token = "NA";
                 outFile[i].write( token + "\n" );
             }

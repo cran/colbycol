@@ -4,6 +4,7 @@
 \alias{ncol}
 \alias{nrow.colbycol}
 \alias{nrow.default}
+\alias{summary.colbycol}
 \alias{nrow}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{ Returns the number of rows/cols in a colbycol object }
@@ -13,10 +14,13 @@
 \usage{
 \method{ncol}{colbycol}(x)
 \method{nrow}{colbycol}(x)
+\method{summary}{colbycol}( object, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{ a \code{colbycol} object }
+  \item{object}{ a \code{colbycol} object }
+  \item{...}{ currently unused }
 }
 %-\details{ }
 \value{
@@ -27,9 +31,11 @@
 %-\note{ }
 \seealso{ \code{\link[base]{ncol}}, \code{\link[base]{nrow}} }
 \examples{
-    cbc.data <- cbc.read.table( system.file("data", "cbc.test.data.txt", package = "colbycol"), sep = "\t" )
+    cbc.data <- cbc.read.table( system.file("data", 
+        "cbc.test.data.txt", package = "colbycol"), sep = "\t" )
     nrow( cbc.data )
     ncol( cbc.data )
+    summary( cbc.data )
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

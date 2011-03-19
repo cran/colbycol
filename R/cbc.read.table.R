@@ -11,7 +11,7 @@
 #
 #################################################################
 
-cbc.read.table <- function( file, tmp.dir = tempfile( pattern = "dir" ), sep = "\t", header = TRUE, ... )
+cbc.read.table <- function( file, tmp.dir = tempfile( pattern = "dir" ), just.read = NULL, sample.pct = NULL, sep = "\t", header = TRUE, ... )
 {
 
     # Checks parameters for errors
@@ -44,10 +44,46 @@ cbc.read.table <- function( file, tmp.dir = tempfile( pattern = "dir" ), sep = "
 
     skip <- ifelse( exists( "skip", mode = "numeric" ), skip, 0 ) + header
 
+    # Check whether there are columns not to read
+
+    cols.to.read <- 1:length( columns )
+
+    if( ! is.null( just.read ) ){
+        if( is.character( just.read ) )
+            just.read <- which( just.read ) %in% names( columns )
+        if( is.logical( just.read ) )
+            just.read <- which( just.read )
+        if( is.numeric( just.read ) )
+            cols.to.read <- intersect( cols.to.read, just.read )
+        if( ! is.numeric( just.read ) )
+            stop( "The just.read argument needs to be either character, numeric or boolean" )
+        if( length( just.read ) == 0 )
+            stop( "There are no columns to read" )
+    }
+
+    # Setting up the sampling scheme
+
+    if( !is.null( sample.pct ) ){
+        if( ! is.numeric( sample.pct ) )
+            stop( "Parameter sample.pct should either be NULL or a value in (0,1)")
+
+        sample.pct <- max( 0, min( 1, sample.pct ) )
+
+        if( sample.pct == 0 )
+            stop( "Parameter sample.pct should be greater than 0" )
+
+        if( sample.pct == 1 )
+            sample.pct <- 10                # Java code does no sampling if sample.pct > 1
+    }
+
+    sample.pct <- ifelse( is.null( sample.pct ), 10, sample.pct )
+
     # Call to Java code via rJava
     .jcbc <- .jnew( "com/datanalytics/colbycol/ColByCol", 
                     file, 
                     paste( lapply( columns, function(x) x$filename ), collapse = ";" ),
+                    as.integer( cols.to.read - 1 ),                 # Java starts counting from 0!
+                    as.double( sample.pct ),
                     as.integer( skip ), sep )
 
     .jcall(.jcbc, "V", "execute", getwd() )        # Assigns the path in Jython; all required data resides there
@@ -55,6 +91,11 @@ cbc.read.table <- function( file, tmp.dir = tempfile( pattern = "dir" ), sep = "
     # TODO: check exceptions
 
     # At this point, the input files should already be sliced
+
+    columns <- columns[ cols.to.read ]
+
+    if( file.info( columns[[1]]$filename )$size == 0 )
+        stop( "No rows to read" )
 
     for( column in names(columns) ){
         tmp <- read.table( columns[[column]]$filename, sep = sep, na.strings = "", comment.char = "", quote = "", header = FALSE, ... )[,1]

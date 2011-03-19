@@ -26,7 +26,8 @@
 %-\note{ }
 \seealso{ \code{\link[base]{colnames}} }
 \examples{
-    cbc.data <- cbc.read.table( system.file("data", "cbc.test.data.txt", package = "colbycol"), sep = "\t" )
+    cbc.data <- cbc.read.table( system.file("data", 
+        "cbc.test.data.txt", package = "colbycol"), sep = "\t" )
     colnames( cbc.data )
 }
 \keyword{ manip }

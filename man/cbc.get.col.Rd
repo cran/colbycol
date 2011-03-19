@@ -20,12 +20,13 @@ cbc.get.col(data, column)
 \value{
   The data contained in the indicated \code{column} in the original file.
 }
-\references{ ~put references to the literature/web site here ~ }
+%-\references{ ~put references to the literature/web site here ~ }
 \author{ Carlos J. Gil Bellosta }
 %-\note{ }
 %-\seealso{ ~~objects to See Also as \code{\link{help}}, ~~~ }
 \examples{
-    cbc.data <- cbc.read.table( system.file("data", "cbc.test.data.txt", package = "colbycol"), sep = "\t" )
+    cbc.data <- cbc.read.table( system.file("data", 
+        "cbc.test.data.txt", package = "colbycol"), sep = "\t" )
     ncol( cbc.data )
     colnames( cbc.data )
     col.01 <- cbc.get.col( cbc.data, 1)

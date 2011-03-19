@@ -6,3 +6,5 @@ export( cbc.get.col, cbc.read.table, colnames, nrow, ncol, colnames.default, nro
 S3method(colnames, colbycol)
 S3method(ncol, colbycol)
 S3method(nrow, colbycol)
+S3method(summary, colbycol)
+S3method(as.data.frame, colbycol)
