@@ -25,7 +25,7 @@
 }
 \author{ Carlos J. Gil Bellosta }
 \examples{
-    cbc.data <- cbc.read.table( system.file("data", 
+    cbc.data <- cbc.read.table( system.file("extdata", 
         "cbc.test.data.txt", package = "colbycol"), sep = "\t" )
 
     my.df <- as.data.frame( cbc.data )

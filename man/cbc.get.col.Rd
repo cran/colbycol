@@ -25,7 +25,7 @@ cbc.get.col(data, column)
 %-\note{ }
 %-\seealso{ ~~objects to See Also as \code{\link{help}}, ~~~ }
 \examples{
-    cbc.data <- cbc.read.table( system.file("data", 
+    cbc.data <- cbc.read.table( system.file("extdata", 
         "cbc.test.data.txt", package = "colbycol"), sep = "\t" )
     ncol( cbc.data )
     colnames( cbc.data )

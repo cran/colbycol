@@ -8,10 +8,11 @@
 #
 # Modifications: 
 #               20090729, CJGB: Changed underlying language from Python to Java
+#               20110417, CJGB: Added support for filehash data storage
 #
 #################################################################
 
-cbc.read.table <- function( file, tmp.dir = tempfile( pattern = "dir" ), just.read = NULL, sample.pct = NULL, sep = "\t", header = TRUE, ... )
+cbc.read.table <- function( file, filehash.name = tempfile( pattern = "filehash_" ), tmp.dir = tempfile( pattern = "dir" ), just.read = NULL, sample.pct = NULL, sep = "\t", header = TRUE, ... )
 {
 
     # Checks parameters for errors
@@ -24,6 +25,11 @@ cbc.read.table <- function( file, tmp.dir = tempfile( pattern = "dir" ), just.re
 
     if( ! file.exists( tmp.dir ) && ! dir.create( tmp.dir, recursive = TRUE )  )
         stop("The destination directory cannot be either found or created.")
+
+    if( ! dbCreate( filehash.name ) )
+        stop( "Unable to create the filehash file" )
+
+    my.filehash <- dbInit( filehash.name )
 
     # Sets original and target dirs
 
@@ -100,13 +106,13 @@ cbc.read.table <- function( file, tmp.dir = tempfile( pattern = "dir" ), just.re
     for( column in names(columns) ){
         tmp <- read.table( columns[[column]]$filename, sep = sep, na.strings = "", comment.char = "", quote = "", header = FALSE, ... )[,1]
         columns[[column]] <- c( columns[[column]], list( class = class( tmp ) ) )
-        save( tmp, file = columns[[column]]$filename )
+        my.filehash[[column]] <- tmp 
         nrows <- length( tmp )
         rm( tmp )
         gc()
     }
 
-    tmp <- list( filename = file, tmp.dir = tmp.dir, columns = columns, nrows = nrows )
+    tmp <- list( filename = file, tmp.dir = tmp.dir, columns = columns, nrows = nrows, filehash = my.filehash )
     class( tmp ) <- "colbycol"
     tmp
 

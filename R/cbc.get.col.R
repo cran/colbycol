@@ -7,6 +7,7 @@
 # Author:       Carlos J. Gil Bellosta
 #
 # Modifications: 
+#               20110417: now data comes from a filehash structure
 #
 #################################################################
 
@@ -21,21 +22,17 @@ cbc.get.col <- function( data, column )
     if( length( column ) != 1 )
         stop("Only a single column can be extracted at a time.")
 
-    if( is.character( column ) ){
-        column <- which( column == colnames( data ) )
-        if( length( column ) == 0 )
-            stop("Column name cannot be found")
+    if( is.numeric( column ) ) {
+        column <- colnames( data )[ column ]
         if( length( column ) != 1 )
-            stop("Column name is ambiguous: two or more columns share the share the same name.")
+            stop( "Index out of range." ) 
     }
 
-    if( !is.numeric( column ) )
-        stop("Invalid column argument")
+    if( ! is.character( column ) )
+        stop( "Value provided for column parameter cannot be recognized." )
 
-    cur.dir <- getwd()
-    on.exit( setwd( cur.dir ) )
+    if( ! column %in% colnames( data ) )
+        stop( "Column name cannot be found." )
 
-    setwd( data$tmp.dir )
-    load ( data$columns[[ column ]]$filename )      # Loads object tmp
-    tmp
+    data$filehash[[ column ]]
 }

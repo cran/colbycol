@@ -17,7 +17,7 @@
   \item{do.NULL}{ required for the \code{colnames} default function }
   \item{prefix}{ required for the \code{colnames} default function }
 }
-\details{ }
+%\details{ }
 \value{
     A character vector containing the names of the columns in \code{x}.
 }
@@ -26,7 +26,7 @@
 %-\note{ }
 \seealso{ \code{\link[base]{colnames}} }
 \examples{
-    cbc.data <- cbc.read.table( system.file("data", 
+    cbc.data <- cbc.read.table( system.file("extdata", 
         "cbc.test.data.txt", package = "colbycol"), sep = "\t" )
     colnames( cbc.data )
 }

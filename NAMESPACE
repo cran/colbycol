@@ -1,6 +1,7 @@
 import("rJava")
+import("filehash")
 
-export( cbc.get.col, cbc.read.table, colnames, nrow, ncol, colnames.default, nrow.default, ncol.default )
+export( cbc.get.col, cbc.read.table, colnames, nrow, ncol, colnames.default, nrow.default, ncol.default, cbc.load, cbc.save )
 #export( cbc.get.col, cbc.read.table, colnames.colbycol, nrow.colbycol, ncol.colbycol, colnames, nrow, ncol, colnames.default, nrow.default, ncol.default )
 
 S3method(colnames, colbycol)

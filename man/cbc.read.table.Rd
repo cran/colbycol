@@ -7,13 +7,14 @@
   It reads the file line by line, breaks it into as many physical files as columns, reads them back into R one by one and saves them in efficient, native R data files.
 }
 \usage{
-cbc.read.table(file, tmp.dir = tempfile( pattern = "dir" ), 
+cbc.read.table(file, filehash.name = tempfile( pattern = "filehash_" ), tmp.dir = tempfile( pattern = "dir" ), 
     just.read = NULL, sample.pct = NULL, sep = "\t", 
     header = TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{file}{ file to be loaded }
+  \item{filehash.name}{ name of the filehash where data will be stored after being read; it will be created via the tools in package \code{filehash} }
   \item{tmp.dir}{ path to the (empty) directory where temporary files are stored }
   \item{just.read}{ vector of column names, numeric positions, or logical pattern for those columns in the file that need to be read; the default value \code{all} loads all columns }
   \item{sample.pct}{ either \code{NULL} (no sampling) or a value (estrictly) between 0 and 1 indicating the proportion of rows to read from \code{file} }
@@ -44,17 +45,17 @@ cbc.read.table(file, tmp.dir = tempfile( pattern = "dir" ),
 %- \note{ }
 \seealso{ \code{\link{read.table}}, \code{\link{save}} }
 \examples{
-    cbc.data <- cbc.read.table( system.file("data", "cbc.test.data.txt", 
+    cbc.data <- cbc.read.table( system.file("extdata", "cbc.test.data.txt", 
             package = "colbycol"), sep = "\t" )
     nrow( cbc.data )
     colnames( cbc.data )
     col.01 <- cbc.get.col( cbc.data, 1)
     col.02 <- cbc.get.col( cbc.data, "col02" )
 
-    cbc.data.sampled <- cbc.read.table( system.file("data", 
+    cbc.data.sampled <- cbc.read.table( system.file("extdata", 
             "cbc.test.data.txt", package = "colbycol"), 
             sample.pct = 0.4, sep = "\t" )
-    cbc.data.2.cols  <- cbc.read.table( system.file("data", 
+    cbc.data.2.cols  <- cbc.read.table( system.file("extdata", 
             "cbc.test.data.txt", package = "colbycol"), 
             just.read = c( 1, 3), sep = "\t" )
 }
