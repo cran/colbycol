@@ -7,7 +7,8 @@
   It reads the file line by line, breaks it into as many physical files as columns, reads them back into R one by one and saves them in efficient, native R data files.
 }
 \usage{
-cbc.read.table(file, filehash.name = tempfile( pattern = "filehash_" ), tmp.dir = tempfile( pattern = "dir" ), 
+cbc.read.table(file, filehash.name = tempfile( pattern = "filehash_" ), 
+    tmp.dir = tempfile( pattern = "dir" ), 
     just.read = NULL, sample.pct = NULL, sep = "\t", 
     header = TRUE, ...)
 }
